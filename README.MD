@@ -38,9 +38,9 @@ Crie o arquivo `package.json` e adicione as seguintes dependências e scripts:
 
 ```json
 {
-  "name": "nuxt3-and-electron-app",
+  "name": "nuxt3-and-electron-and-nuxt-ui-v3-app",
   "version": "1.0.0",
-  "description": "Nuxt 3 + Electron App",
+  "description": "Nuxt 3 + Electron + NuxtUI v3 -full integration App",
   "main": "electron/main.js",
   "scripts": {
     "dev": "nuxt dev",
@@ -49,9 +49,10 @@ Crie o arquivo `package.json` e adicione as seguintes dependências e scripts:
     "preview": "nuxt preview",
     "electron:dev": "node electron/dev.js",
     "electron:build": "nuxt build && electron-builder",
-    "watch": "nodemon -e js,ts,vue,html,json,mjs --exec node electron/dev.js"
+    "watch": "nodemon -e js,ts,vue,html,json,mjs,css,scss --exec node electron/dev.js"
   },
   "dependencies": {
+    "@nuxt/ui": "^3.0.0-alpha.13",
     "dotenv": "^16.4.7",
     "electron-serve": "^1.1.0"
   },
@@ -63,6 +64,7 @@ Crie o arquivo `package.json` e adicione as seguintes dependências e scripts:
     "wait-on": "^7.0.1"
   }
 }
+
 ```
 
 Em seguida, instale as dependências:
@@ -79,19 +81,33 @@ Crie o arquivo `nuxt.config.ts` para configurar o Nuxt3:
 
 ```typescript
 export default defineNuxtConfig({
-  ssr: false,
-
-  app: {
-    baseURL: process.env.NODE_ENV === 'development' ? '/' : './'
-  },
-  devServer:{
-    port: 33222
-  },
-  compatibilityDate: '2025-02-08'
-})
+    ssr: false,
+    modules: ['@nuxt/ui'],
+    css: ['~/assets/css/main.css'],
+    app: {
+      baseURL: process.env.NODE_ENV === 'development' ? '/' : './'
+    },
+    devServer:{
+      port: 33222
+    },
+    compatibilityDate: '2025-02-08'
+  })
 ```
 
 Este arquivo configura o Nuxt para funcionar em modo SPA (Single Page Application), define a baseURL e a porta do servidor de desenvolvimento.
+
+### 3.5 Configuração `./assets/css/main.css`
+
+crie um diretorio no projeto `./assets/css`
+
+Depois Crie o arquivo `main.css` para configurar Nuxt-ui + tailwindCssv4
+
+**Arquivo:** `main.css`
+
+```css
+@import "tailwindcss";
+@import "@nuxt/ui";
+```
 
 ### 4. Criação dos Componentes Nuxt
 
@@ -451,8 +467,8 @@ nuxtDev.on('error', (err) => {
 // Wait for Nuxt server to be ready
 waitOn({
   resources: ['http://localhost:33222'],//
-  timeout: 30000,
-  interval: 100,
+  timeout: 120000,
+  interval: 1200,
 }).then(() => {
   console.log('Nuxt development server is ready')
   startElectron()
